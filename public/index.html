@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+
+  <link rel="stylesheet" href="https://rawgit.com/angular/bower-material/master/angular-material.css">
+    <!-- Angular Material Dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-aria.js"></script>
+
+    <!-- Angular Material Javascript using RawGit to load directly from `bower-material/master` -->
+    <script src="https://rawgit.com/angular/bower-material/master/angular-material.js"></script>
+<script>
+	
+	var app = angular.module('myapp', ['ngMaterial']);
+	app.controller('myctrl', function($scope, $http) {
+		$scope.state="";
+		$scope.client = {};
+		$scope.items=[];
+		$scope.getItems = function(){
+			$http.get('/pppname1', $scope.item).
+			  success(function(data, status, headers, config) {
+				$scope.items = data;
+			  }).
+			  error(function(data, status, headers, config) {
+				alert(angular.toJson(data));
+			  });
+		}
+		
+		$scope.getItem = function(itemn) {
+			var toitem = !!itemn;
+		
+				itemn = itemn || $scope.item.itemn;
+			$http.get('/pppname1/'+itemn).
+			  success(function(data, status, headers, config) {
+				if (data.status) {
+					$scope.item = data.data;
+					if (toitem) $scope.state = "item";
+				} else {
+					alert(data.msg);
+				}
+			  }).
+			  error(function(data, status, headers, config) {
+				alert(angular.toJson(data));
+			  });
+		}
+		$scope.deleteItem = function() {
+			$http.get('/pppname1/delete/'+$scope.item.itemn).
+			  success(function(data, status, headers, config) {
+				if (data.status) {
+					alert("item deleted");
+					$scope.item = null;
+				} else {
+					alert(data.msg);
+				}
+			  }).
+			  error(function(data, status, headers, config) {
+				alert(angular.toJson(data));
+			  });
+		}		
+		
+		$scope.item = {};
+		$scope.saveItem = function() {
+			$http.post('/pppname1', $scope.item).
+			  success(function(data, status, headers, config) {
+				alert(data);
+			  }).
+			  error(function(data, status, headers, config) {
+				alert(data);
+			  });
+		}
+
+		$scope.save = function() {
+			console.log($scope.client);
+			// send data to server
+		}
+
+			
+
+		window.s = $scope;
+	});
+
+</script>
+
+
+
+</head>
+
+
+<body ng-app="myapp" style="text-align:center">
+
+<a href="ppname.html" target="blank">ppname</a>
+
+<a href="pppname1.html" target="blank">pppname1</a>
+
+
+<h1 align="center" noshade >客 戶 管 理 </h1>
+
+
+<style>
+	.formfield{
+		display:block;
+		color:green;
+	}
+
+	.formfield > input {
+		color:blue;
+		width:300px;
+display:block;
+	}
+
+	#cnphone {
+		color:red;
+	}
+</style>
+<div ng-controller="myctrl">
+
+	 <button ng-click="saveItem()">Save Item</button>
+			<button ng-click="getItem()">Get Item</button>
+			<button ng-click="deleteItem()">Delete Item</button>	
+	
+	
+		<div style="display:inline-block;width:300px;overflow:auto;height:600px;position:fixed;left:0">	
+			<button ng-click="getItems()">Get Itmes</button>
+			<input ng-model="itemFilter.itemn">
+			<input ng-model="itemFilter.item">
+			<div style="display:inline-block:height:100%;">
+				<div><span>Itemn</span><span>Item</span></div>
+				<ul>
+				<li ng-repeat="item in items|filter:itemFilter">
+					<span><a style="color:blue;cursor:pointer;" ng-click="getItem(item.itemn)">{{item.itemn}}</a></span>
+					<span>{{item.item}}</span>
+				</ul>
+				</div>
+		</div>
+		
+		
+		
+<div style="border:black 1px solid; width:1270px;margin:auto;position:fixed;right:0">
+	
+		
+		
+			
+		<div style="text-align:left  >
+		<md-content md-theme="docs-dark" class="md-padding" layout="row" layout-sm="column" style="font-size:1.2em" >
+			<md-input-container>
+			  <label align="left" noshade style="color:green"  >客戶編號</label>
+			  <input ng-model="item.itemn">
+			</md-input-container>
+			</md-content>
+			<md-input-container>
+			  <label align="left" noshade>印刷類別</label>
+			  <input ng-model="item.pttype">
+			</md-input-container>
+			
+			<md-input-container>
+			  <label align="left" noshade >設備種類</label>
+			  <input ng-model="item.ptmach">
+			</md-input-container>
+			
+			
+				<md-input-container>
+			  <label align="left" noshade>付 款 地</label>
+			  <input ng-model="item.plac">
+			</md-input-container>
+			
+			<md-input-container>
+			  <label align="left" noshade >幣    別</label>
+			  <input ng-model="item.money">
+			</md-input-container>
+			
+			
+			
+			
+			
+		</div>
+        <div>		
+			
+			 <md-content md-theme="docs-dark" class="md-padding" layout="row" layout-sm="column" style="font-size:1.2em">
+			<md-input-container>
+			  <label align="left" noshade style="color:red"  >客戶名稱</label>
+			  <input ng-model="item.item" >
+			</md-input-container>
+			 <md-input-container flex>
+          <label align="left" noshade >客戶名稱(台)</label>
+          <input ng-model="item.itemt" placeholder="Placeholder text">
+        </md-input-container>
+        <md-input-container flex>
+          <label align="left" noshade >客戶名稱(港)</label>
+          <input ng-model="item.itemh">
+        </md-input-container>
+		</md-content
+		
+		
+		
+		
+  <md-content class="md-padding">
+    <form name="userForm">
+     </div>
+     
+      
+      <div layout layout-sm="column">
+        <md-input-container flex>
+          <label  align="left" noshade >大陸電話</label>
+          <input ng-model="item.tel">
+        </md-input-container>
+        <md-input-container flex>
+          <label  align="left" noshade>台灣電話</label>
+          <input ng-model="item.tel1">
+        </md-input-container>
+        <md-input-container flex>
+          <label  align="left" noshade>香港電話</label>
+          <input ng-model="item.telh">
+        </md-input-container>
+      </div>
+	    <div layout layout-sm="column">
+        <md-input-container flex>
+          <label align="left" noshade >大陸傳真</label>
+          <input ng-model="item.fax">
+        </md-input-container>
+        <md-input-container flex>
+          <label align="left" noshade >台灣傳真</label>
+          <input ng-model="item.faxt">
+        </md-input-container>
+        <md-input-container flex>
+          <label align="left" noshade >香港傳真</label>
+          <input ng-model="item.faxh">
+        </md-input-container>
+      </div>
+	  <div layout layout-sm="column">
+        <md-input-container flex>
+          <label align="left" noshade >大陸地址</label>
+          <input ng-model="item.addr">
+        </md-input-container>
+        <md-input-container flex>
+          <label  align="left" noshade>送 貨 地</label>
+          <input ng-model="item.add1">
+        </md-input-container>
+       
+      </div>
+	  
+	   <div layout layout-sm="column">
+        <md-input-container flex>
+          <label align="left" noshade >連 絡 人 1</label>
+          <input ng-model="item.name1">
+        </md-input-container>
+        <md-input-container flex>
+          <label align="left" noshade >連 絡 人 2</label>
+          <input ng-model="item.name2">
+        </md-input-container>
+        <md-input-container flex>
+          <label align="left" noshade >連 絡 人 3</label>
+          <input ng-model="item.name3">
+        </md-input-container>
+      </div>
+	  
+	    <div layout layout-sm="column">
+        <md-input-container flex>
+          <label align="left" noshade >台灣地址</label>
+          <input ng-model="item.addrt">
+        </md-input-container>
+        <md-input-container flex>
+          <label align="left" noshade >香港地址</label>
+          <input ng-model="item.addrh">
+        </md-input-container>
+       
+     </div>
+	  <md-input-container flex>
+        <label>Address</label>
+        <input ng-model="user.address">
+      </md-input-container>
+     
+    </form>
+  </md-content>
+ 
+		
+</div>
+</div>
+
+		
+		
+		
+	
+	
+</div>
+
+</body>
+</html>
