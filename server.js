@@ -10,7 +10,7 @@ var Sequelize = require('sequelize')
 
 
 	
-var ppname = sequelize.define('ppname', {
+var Product = sequelize.define('Product', {
   itemn: {type : Sequelize.STRING, primaryKey : true, unique : true},
   name: Sequelize.STRING,
   name1: Sequelize.STRING,
@@ -22,9 +22,6 @@ var ppname = sequelize.define('ppname', {
   price1: Sequelize.STRING,
   tax: Sequelize.STRING,
   cost: Sequelize.STRING,
- 
-  
-  
 }, {
 	tableName:"ppname",
     timestamps: false
@@ -32,7 +29,7 @@ var ppname = sequelize.define('ppname', {
 
 
 
-var pppname1 = sequelize.define('pppname1', {
+var Client = sequelize.define('Client', {
   itemn: {type : Sequelize.STRING, primaryKey : true, unique : true},
   item: Sequelize.STRING,
   item1: Sequelize.STRING,
@@ -62,7 +59,7 @@ var pppname1 = sequelize.define('pppname1', {
     timestamps: false
 });
 
-var pppname = sequelize.define('pppname', {
+var Supplier = sequelize.define('Supplier', {
   itemn: {type : Sequelize.STRING, primaryKey : true, unique : true},
   item: Sequelize.STRING,
   item1: Sequelize.STRING,
@@ -94,30 +91,61 @@ app.use(express.static(__dirname + '/public'));
 app.get('/ppname', function(req, res){
 	console.log("/ppname");
 	
-	ppname.findAll().then(function(data){
+	Product.findAll().then(function(data){
 		console.log("findAll done");
 		console.log("found "+data.length+" items");
 		res.json(data);
 	});
 });
-app.get('/ppname/:itemn', function(req, res){
-	console.log("/ppname");
-	/*
-	var name = "cs0";
-	
-	function findFinish(err, result) {
-		if (err) {
-			res.json({status:false,msg:"not found"});
+
+app.get("/test", function(request, response){
+	// 資料庫查詢完執行
+	function whenFinish(error, result) {
+		if (error) {
+			response.json({status:false,msg:"not found"});
 		} else {
-			res.json(result);
+			response.json(result);
 		}
 	}
-	   
-	pppname1.findAll({
-			where: ["itemn like ?","%"+name+"%"]
-	}).complete(findFinish);
-	*/
-	ppname.find({ where: { itemn: req.params.itemn } })
+	// 查詢資料庫
+	var name="cs";
+	Client.findAll({
+		where: ["itemn like ?","%"+name+"%"]
+	}).complete(whenFinish);
+	
+	
+});
+
+// 讀取所有客戶
+app.get('/clients', function(request, response){
+	Client.findAll().complete(function(error, result){
+		response.json(result);
+	});
+});
+// 讀取所有產品
+app.get('/products', function(request, response){
+	Product.findAll().complete(function(error, result){
+		response.json(result);
+	});
+});
+// 讀取所有供應商
+app.get('/suppliers', function(request, response){
+	console.log("query="+request.query);	// supplier?take=4&skip=5
+	console.log("params="+request.params); // /supplier/{take}/{skip}
+	console.log("body="+request.body); // post
+	Supplier.findAll({
+		limit:request.query.take,
+		offset:request.query.skip,
+	}).complete(function(error, result){
+		response.json(result);
+	});
+});
+
+
+app.get('/ppname/:itemn', function(req, res){
+	console.log("/ppname");	
+
+	Product.find({ where: { itemn: req.params.itemn } })
 	  .complete(function(err, item) {
 		if (!!err) {
 			res.json({status:false,msg:'An error occurred while searching item for '+req.params.itemn});
@@ -135,7 +163,7 @@ app.get('/ppname/:itemn', function(req, res){
 app.get('/pppname1', function(req, res){
 	console.log("/pppname1");
 	
-	pppname1.findAll().then(function(data){
+	Supplier.findAll().then(function(data){
 		console.log("findAll done");
 		console.log("found "+data.length+" items");
 		res.json(data);
@@ -144,7 +172,7 @@ app.get('/pppname1', function(req, res){
 app.get('/pppname1/:itemn', function(req, res){
 	console.log("/ppname");
 	var query = { where: { itemn: req.params.itemn } };
-	pppname1.find()
+	Supplier.find()
 	  .complete(function(err, item) {
 		if (!!err) {
 			res.json({status:false,msg:'An error occurred while searching item for '+req.params.itemn});
@@ -162,7 +190,7 @@ app.get('/pppname1/:itemn', function(req, res){
 app.get('/pppname', function(req, res){
 	console.log("/pppname");
 	
-	pppname.findAll().then(function(data){
+	Supplier.findAll().then(function(data){
 		console.log("findAll done");
 		console.log("found "+data.length+" items");
 		res.json(data);
@@ -171,7 +199,7 @@ app.get('/pppname', function(req, res){
 app.get('/pppname/:itemn', function(req, res){
 	console.log("/pppname");
 	
-	pppname.find({ where: { itemn: req.params.itemn } })
+	Supplier.find({ where: { itemn: req.params.itemn } })
 	  .complete(function(err, item) {
 		if (!!err) {
 			res.json({status:false,msg:'An error occurred while searching item for '+req.params.itemn});
@@ -185,7 +213,7 @@ app.get('/pppname/:itemn', function(req, res){
 
 app.get('/pppname1/delete/:itemn', function(req, res){
 	console.log("/pppname1");
-	pppname1.find(req.params.itemn).on('success', function(item) {
+	Client.find(req.params.itemn).on('success', function(item) {
 	  item.destroy().on('success', function(u) {
 		if (u && u.deletedAt) {
 		  res.json({status:true});
@@ -198,7 +226,7 @@ app.get('/pppname1/delete/:itemn', function(req, res){
 
 app.get('/pppname/delete/:itemn', function(req, res){
 	console.log("/pppname");
-	pppname.find(req.params.itemn).on('success', function(item) {
+	Supplier.find(req.params.itemn).on('success', function(item) {
 	  item.destroy().on('success', function(u) {
 		if (u && u.deletedAt) {
 		  res.json({status:true});
@@ -211,7 +239,7 @@ app.get('/pppname/delete/:itemn', function(req, res){
 
 app.get('/ppname/delete/:itemn', function(req, res){
 	console.log("/ppname");
-	ppname.find(req.params.itemn).on('success', function(item) {
+	Product.find(req.params.itemn).on('success', function(item) {
 	  item.destroy().on('success', function(u) {
 		if (u && u.deletedAt) {
 		  res.json({status:true});
@@ -224,7 +252,7 @@ app.get('/ppname/delete/:itemn', function(req, res){
 
 app.post('/pppname1', function(req, res){
 	console.log(req.body);
-	var item = pppname1.build(req.body);
+	var item = Client.build(req.body);
 	 
 	item
 	  .save()
@@ -239,7 +267,7 @@ app.post('/pppname1', function(req, res){
 
 app.post('/pppname', function(req, res){
 	console.log(req.body);
-	var item = pppname.build(req.body);
+	var item = Supplier.build(req.body);
 	 
 	item
 	  .save()
@@ -254,7 +282,7 @@ app.post('/pppname', function(req, res){
 
 app.post('/ppname', function(req, res){
 	console.log(req.body);
-	var item = ppname.build(req.body);
+	var item = Product.build(req.body);
 	 
 	item
 	  .save()
