@@ -92,6 +92,10 @@
 
 <h1 align="center" noshade >客 戶 管 理 </h1>
 
+            <button ng-click="saveItem()" >Save Item</button>
+			<button ng-click="getItem()" >Get Item</button>
+			<button ng-click="deleteItem()" >Delete Item</button>	
+	
 
 <style>
 	.formfield{
@@ -111,12 +115,9 @@ display:block;
 </style>
 <div ng-controller="myctrl">
 
-	 <button ng-click="saveItem()">Save Item</button>
-			<button ng-click="getItem()">Get Item</button>
-			<button ng-click="deleteItem()">Delete Item</button>	
 	
 	
-		<div style="display:inline-block;width:300px;overflow:auto;height:600px;position:fixed;left:0">	
+		<div style="display:inline-block;width:250px;overflow:auto;height:600px;position:fixed;left:0">	
 			<button ng-click="getItems()">Get Itmes</button>
 			<input ng-model="itemFilter.itemn">
 			<input ng-model="itemFilter.item">
@@ -132,19 +133,19 @@ display:block;
 		
 		
 		
-<div style="border:black 1px solid; width:1270px;margin:auto;position:fixed;right:0">
+<div style="border:black 1px solid; width:80%;margin:auto;position:fixed;right:0">
 	
 		
 		
 			
 		<div style="text-align:left  >
-		<md-content md-theme="docs-dark" class="md-padding" layout="row" layout-sm="column" style="font-size:1.2em" >
+		  <md-content md-theme="docs-dark" class="md-padding" layout="row" layout-sm="column" style="font-size:1.2em" >
 			<md-input-container>
 			  <label align="left" noshade style="color:green"  >客戶編號</label>
 			  <input ng-model="item.itemn">
 			</md-input-container>
-			</md-content>
-			<md-input-container>
+		  </md-content>
+		    <md-input-container>
 			  <label align="left" noshade>印刷類別</label>
 			  <input ng-model="item.pttype">
 			</md-input-container>
@@ -155,7 +156,7 @@ display:block;
 			</md-input-container>
 			
 			
-				<md-input-container>
+			<md-input-container>
 			  <label align="left" noshade>付 款 地</label>
 			  <input ng-model="item.plac">
 			</md-input-container>
@@ -163,12 +164,9 @@ display:block;
 			<md-input-container>
 			  <label align="left" noshade >幣    別</label>
 			  <input ng-model="item.money">
-			</md-input-container>
+	        </md-input-container>
 			
-			
-			
-			
-			
+						
 		</div>
         <div>		
 			
@@ -251,6 +249,7 @@ display:block;
       </div>
 	  
 	    <div layout layout-sm="column">
+		
         <md-input-container flex>
           <label align="left" noshade >台灣地址</label>
           <input ng-model="item.addrt">
@@ -261,10 +260,7 @@ display:block;
         </md-input-container>
        
      </div>
-	  <md-input-container flex>
-        <label>Address</label>
-        <input ng-model="user.address">
-      </md-input-container>
+	 
      
     </form>
   </md-content>

@@ -21,7 +21,7 @@
 		$scope.client = {};
 		$scope.items=[];
 		$scope.getItems = function(){
-			$http.get('/ppname', $scope.item).
+			$http.get('/pppname', $scope.item).
 			  success(function(data, status, headers, config) {
 				$scope.items = data;
 			  }).
@@ -29,15 +29,12 @@
 				alert(angular.toJson(data));
 			  });
 		}
-		$scope.updateItem= function(){
-			console.log("update item");
-		}
 		
 		$scope.getItem = function(itemn) {
 			var toitem = !!itemn;
 		
 				itemn = itemn || $scope.item.itemn;
-			$http.get('/ppname/'+encodeURIComponent(itemn)).
+			$http.get('/pppname/'+itemn).
 			  success(function(data, status, headers, config) {
 				if (data.status) {
 					$scope.item = data.data;
@@ -51,7 +48,7 @@
 			  });
 		}
 		$scope.deleteItem = function() {
-			$http.get('/ppname/delete/'+$scope.item.itemn).
+			$http.get('/pppname/delete/'+$scope.item.itemn).
 			  success(function(data, status, headers, config) {
 				if (data.status) {
 					alert("item deleted");
@@ -67,7 +64,7 @@
 		
 		$scope.item = {};
 		$scope.saveItem = function() {
-			$http.post('/ppname', $scope.item).
+			$http.post('/pppname', $scope.item).
 			  success(function(data, status, headers, config) {
 				alert(data);
 			  }).
@@ -91,9 +88,9 @@
 
 
 </head>
-<body ng-app="myapp" style="text-align:center">
+<body ng-app="myapp" style="text-align:left">
 
-<h1 align="center" noshade >貨 品 管 理 </h1>
+<h1 align="center" noshade >供 應  廠  商 管 理 </h1>
 
 
 <style>
@@ -114,11 +111,7 @@ display:block;
 </style>
 <div ng-controller="myctrl">
 
-	 <button ng-click="saveItem()">Save Item</button>
-			<button ng-click="getItem()">Get Item</button>
-			<button ng-click="updateItem()">Update Item</button>
-			<button ng-click="deleteItem()">Delete Item</button>	
-	
+	       
 	
 		<div style="display:inline-block;width:250px;overflow:auto;height:600px;position:fixed;left:0">	
 			<button ng-click="getItems()">Get Itmes</button>
@@ -129,7 +122,7 @@ display:block;
 				<ul>
 				<li ng-repeat="item in items|filter:itemFilter">
 					<span><a style="color:blue;cursor:pointer;" ng-click="getItem(item.itemn)">{{item.itemn}}</a></span>
-					<span>{{item.name}}</span>
+					<span>{{item.item}}</span>
 				</ul>
 				</div>
 		</div>
@@ -144,23 +137,25 @@ display:block;
 		<div style="text-align:left  >
 		<md-content md-theme="docs-dark" class="md-padding" layout="row" layout-sm="column" style="font-size:1.2em" >
 			<md-input-container>
-			  <label align="left" noshade style="color:green"  >品名編號</label>
+			  <label align="left" noshade style="color:green"  >廠商編號</label>
 			  <input ng-model="item.itemn">
 			</md-input-container>
 			</md-content>
-					
-				
-					
+			
+			
+			
+			
 			
 		</div>
         <div>		
 			
 			 <md-content md-theme="docs-dark" class="md-padding" layout="row" layout-sm="column" style="font-size:1.2em">
 			<md-input-container>
-			  <label align="left" noshade style="color:red"  >貨品名稱</label>
-			  <input ng-model="item.name" >
+			  <label align="left" noshade style="color:red"  >廠商名稱</label>
+			  <input ng-model="item.item" >
 			</md-input-container>
-			
+		</md-input-container>
+       
 		</md-content
 		
 		
@@ -173,63 +168,72 @@ display:block;
       
       <div layout layout-sm="column">
         <md-input-container flex>
-          <label  align="left" noshade >單    位</label>
-          <input ng-model="item.unit">
+          <label  align="left" noshade >電    話</label>
+          <input ng-model="item.tel">
         </md-input-container>
-       
-      </div>
-	    <div layout layout-sm="column">
         <md-input-container flex>
-          <label align="left" noshade >包裝方式</label>
-          <input ng-model="item.pack">
+          <label  align="left" noshade>傳    真</label>
+          <input ng-model="item.fax">
         </md-input-container>
        
-	   
-	   
-	   
-      </div>
-	  <div layout layout-sm="column">
+	    <md-input-container flex>
+          <label align="left" noshade >統一編號</label>
+          <input ng-model="item.itemx">
+        </md-input-container>
         <md-input-container flex>
-          <label align="left" noshade >類  別 ( msp )</label>
-          <input ng-model="item.msp">
+          <label align="left" noshade >連 絡 人 1</label>
+          <input ng-model="item.name">
         </md-input-container>
        
-       
-      </div>
-	  
-	   <div layout layout-sm="column">
-        <md-input-container flex>
-          <label align="left" noshade >售    價</label>
-          <input ng-model="item.price">
-        </md-input-container>
-       
-	   
 	   
       </div>
 	  
+	 
+	  
+	  
+	  
 	    <div layout layout-sm="column">
         <md-input-container flex>
-          <label align="left" noshade >成    本</label>
-          <input ng-model="item.cost">
+          <label align="left" noshade >地    址</label>
+          <input ng-model="item.addr">
         </md-input-container>
        
        
      </div>
-	
-     
+	 
     </form>
+	
+	 <button ng-click="saveItem()"style="text-align:right">Save Item</button>
+			<button ng-click="getItem()"style="text-align:right">Get Item</button>
+			<button ng-click="deleteItem()"style="text-align:right">Delete Item</button>	
+	  
+	
+	
   </md-content>
  
+          
+
+
+		 
+		 
 		
-</div>
 </div>
 
-		
+       
+</div>
+
+		 
 		
 		
 	
 	
 </div>
-
+      
+	  
+	  
 </body>
+
+         
+ 
+
 </html>

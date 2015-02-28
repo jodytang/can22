@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var Sequelize = require('sequelize')
   , sequelize = new Sequelize('test_aaa', 'root', '10181018', {
       dialect: "mysql", // or 'sqlite', 'postgres', 'mariadb'
-      port:    3306, // or 5432 (for postgres)
+      port:    3306, // or 5432 (for postgres)   
     });
 
 
@@ -29,6 +29,8 @@ var ppname = sequelize.define('ppname', {
 	tableName:"ppname",
     timestamps: false
 });
+
+
 
 var pppname1 = sequelize.define('pppname1', {
   itemn: {type : Sequelize.STRING, primaryKey : true, unique : true},
@@ -60,6 +62,27 @@ var pppname1 = sequelize.define('pppname1', {
     timestamps: false
 });
 
+var pppname = sequelize.define('pppname', {
+  itemn: {type : Sequelize.STRING, primaryKey : true, unique : true},
+  item: Sequelize.STRING,
+  item1: Sequelize.STRING,
+ 
+  tel: Sequelize.STRING,
+ 
+  addr: Sequelize.STRING,
+  add1: Sequelize.STRING,
+  name: Sequelize.STRING,
+ 
+  fax: Sequelize.STRING,
+  itemx: Sequelize.STRING,
+  
+  
+  
+}, {
+	tableName:"pppname",
+    timestamps: false
+});
+
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -80,6 +103,20 @@ app.get('/ppname', function(req, res){
 app.get('/ppname/:itemn', function(req, res){
 	console.log("/ppname");
 	
+	var name = "cs0";
+	
+	function findFinish(err, result) {
+		if (err) {
+			res.json({status:false,msg:"not found"});
+		} else {
+			res.json(result);
+		}
+	}
+	   
+	pppname1.findAll({
+			where: ["itemn like ?","%"+name+"%"]
+	}).complete(findFinish);
+	/*
 	ppname.find({ where: { itemn: req.params.itemn } })
 	  .complete(function(err, item) {
 		if (!!err) {
@@ -90,6 +127,9 @@ app.get('/ppname/:itemn', function(req, res){
 			res.json({status:true,data:item});
 		}
 	  })
+	  */
+	  
+	  
 });
 
 app.get('/pppname1', function(req, res){
@@ -103,8 +143,35 @@ app.get('/pppname1', function(req, res){
 });
 app.get('/pppname1/:itemn', function(req, res){
 	console.log("/ppname");
+	var query = { where: { itemn: req.params.itemn } };
+	pppname1.find()
+	  .complete(function(err, item) {
+		if (!!err) {
+			res.json({status:false,msg:'An error occurred while searching item for '+req.params.itemn});
+		} else if (!item) {
+		  res.json({status:false,msg:"item not found"});
+		} else {
+			
+			
+			res.json({status:true,data:item});
+		}
+	  })
+});
+
+
+app.get('/pppname', function(req, res){
+	console.log("/pppname");
 	
-	pppname1.find({ where: { itemn: req.params.itemn } })
+	pppname.findAll().then(function(data){
+		console.log("findAll done");
+		console.log("found "+data.length+" items");
+		res.json(data);
+	});
+});
+app.get('/pppname/:itemn', function(req, res){
+	console.log("/pppname");
+	
+	pppname.find({ where: { itemn: req.params.itemn } })
 	  .complete(function(err, item) {
 		if (!!err) {
 			res.json({status:false,msg:'An error occurred while searching item for '+req.params.itemn});
@@ -119,6 +186,19 @@ app.get('/pppname1/:itemn', function(req, res){
 app.get('/pppname1/delete/:itemn', function(req, res){
 	console.log("/pppname1");
 	pppname1.find(req.params.itemn).on('success', function(item) {
+	  item.destroy().on('success', function(u) {
+		if (u && u.deletedAt) {
+		  res.json({status:true});
+		} else {
+			res.json({status:true});
+		}
+	  })
+	})
+});
+
+app.get('/pppname/delete/:itemn', function(req, res){
+	console.log("/pppname");
+	pppname.find(req.params.itemn).on('success', function(item) {
 	  item.destroy().on('success', function(u) {
 		if (u && u.deletedAt) {
 		  res.json({status:true});
@@ -145,6 +225,21 @@ app.get('/ppname/delete/:itemn', function(req, res){
 app.post('/pppname1', function(req, res){
 	console.log(req.body);
 	var item = pppname1.build(req.body);
+	 
+	item
+	  .save()
+	  .complete(function(err) {
+		if (!!err) {
+		  res.send('The instance has not been saved:', err)
+		} else {
+		  res.send('We have a persisted instance now')
+		}
+	  })
+});
+
+app.post('/pppname', function(req, res){
+	console.log(req.body);
+	var item = pppname.build(req.body);
 	 
 	item
 	  .save()

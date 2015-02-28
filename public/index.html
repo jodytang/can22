@@ -92,9 +92,11 @@
 
 <body ng-app="myapp" style="text-align:center">
 
-<a href="ppname.html" target="blank">ppname</a>
+<a href="ppname.html"target="_blank">ppname</a>
 
-<a href="pppname1.html" target="blank">pppname1</a>
+<a href="pppname1.html"target="_blank">pppname1</a>
+
+<a href="pppname.html"target="_blank">pppname</a>
 
 
 <h1 align="center" noshade >客 戶 管 理 </h1>
@@ -123,7 +125,7 @@ display:block;
 			<button ng-click="deleteItem()">Delete Item</button>	
 	
 	
-		<div style="display:inline-block;width:300px;overflow:auto;height:600px;position:fixed;left:0">	
+		<div style="display:inline-block;width:250px;overflow:auto;height:600px;position:fixed;left:0">	
 			<button ng-click="getItems()">Get Itmes</button>
 			<input ng-model="itemFilter.itemn">
 			<input ng-model="itemFilter.item">
@@ -139,7 +141,7 @@ display:block;
 		
 		
 		
-<div style="border:black 1px solid; width:1270px;margin:auto;position:fixed;right:0">
+<div style="border:black 1px solid; width:75%;margin:auto;position:fixed;right:0">
 	
 		
 		
@@ -258,6 +260,7 @@ display:block;
       </div>
 	  
 	    <div layout layout-sm="column">
+		
         <md-input-container flex>
           <label align="left" noshade >台灣地址</label>
           <input ng-model="item.addrt">
@@ -266,13 +269,9 @@ display:block;
           <label align="left" noshade >香港地址</label>
           <input ng-model="item.addrh">
         </md-input-container>
-       
+      
      </div>
-	  <md-input-container flex>
-        <label>Address</label>
-        <input ng-model="user.address">
-      </md-input-container>
-     
+	
     </form>
   </md-content>
  
