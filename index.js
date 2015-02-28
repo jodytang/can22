@@ -102,7 +102,7 @@ app.get('/ppname', function(req, res){
 });
 app.get('/ppname/:itemn', function(req, res){
 	console.log("/ppname");
-	
+	/*
 	var name = "cs0";
 	
 	function findFinish(err, result) {
@@ -116,7 +116,7 @@ app.get('/ppname/:itemn', function(req, res){
 	pppname1.findAll({
 			where: ["itemn like ?","%"+name+"%"]
 	}).complete(findFinish);
-	/*
+	*/
 	ppname.find({ where: { itemn: req.params.itemn } })
 	  .complete(function(err, item) {
 		if (!!err) {
@@ -127,7 +127,7 @@ app.get('/ppname/:itemn', function(req, res){
 			res.json({status:true,data:item});
 		}
 	  })
-	  */
+	  
 	  
 	  
 });
